@@ -1,5 +1,4 @@
-from flask import Flask, request, render_template
-import torch
+from flask import Flask, render_template
 from SPIS_Stock_Final import model, predict_next_day, scaler 
 from SPIS_Stock_Final import tesla_path, tesla_names, apple_path, apple_names, nvidia_path, nvidia_names, google_path, google_names, meta_path, meta_names, qc_path, qc_names, ms_path, ms_names, amazon_path, amazon_names, samsung_path, samsung_names, netflix_path, netflix_names
 
