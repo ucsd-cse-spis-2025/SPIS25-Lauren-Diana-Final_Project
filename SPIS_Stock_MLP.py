@@ -1,7 +1,9 @@
 import kagglehub
 
-path = kagglehub.dataset_download("iamtanmayshukla/tesla-stocks-dataset")
-print("Path to dataset files:", path)
+path1 = kagglehub.dataset_download("iamtanmayshukla/tesla-stocks-dataset")
+print("Path to dataset files:", path1)
+
+path2 = kagglehub.dataset_download()
 
 
 import numpy as np
