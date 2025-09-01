@@ -1,11 +1,3 @@
-import kagglehub
-
-path1 = kagglehub.dataset_download("iamtanmayshukla/tesla-stocks-dataset")
-print("Path to dataset files:", path1)
-
-path2 = kagglehub.dataset_download()
-
-
 import numpy as np
 import pandas as pd
 import torch
@@ -14,63 +6,156 @@ import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
-
 import ta
 
+import kagglehub
 
-df = pd.read_csv(r"C:\Users\laure\.cache\kagglehub\datasets\iamtanmayshukla\tesla-stocks-dataset\versions\5\HistoricalData_1726367135218.csv")
-#df = df[df["Name"] == "AAPL"]
+# Import data
+# Tesla data
+path1 = kagglehub.dataset_download("iamtanmayshukla/tesla-stocks-dataset")
 
+print("Path to dataset files:", path1)
 
-names = ['Close/Last', 'Open', 'High', 'Low']
+tesla_names = ["Date", "Open", "High", "Low", "Close/Last", "Volume"]
+tesla_path = r"C:\Users\laure\.cache\kagglehub\datasets\iamtanmayshukla\tesla-stocks-dataset\versions\5\HistoricalData_1726367135218.csv"
 
-for col in names:
-  df[col] = df[col].replace('[/$]', '', regex=True).astype(float)
+# Apple data
+path2 = kagglehub.dataset_download("varpit94/apple-stock-data-updated-till-22jun2021")
 
+print("Path to dataset files:", path2)
 
-splitted = df['Date'].str.split('/', expand=True)
+apple_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+apple_path = r"C:\Users\laure\.cache\kagglehub\datasets\varpit94\apple-stock-data-updated-till-22jun2021\versions\8\AAPL.csv"
 
-df['day'] = splitted[1].astype('int')
-df['month'] = splitted[0].astype('int')
-df['year'] = splitted[2].astype('int')
+# Nvidia data
+path3 = kagglehub.dataset_download("programmerrdai/nvidia-stock-historical-data")
 
+print("Path to dataset files:", path3)
 
-# Feature engineering
-df['open-close'] = df['Open'] - df['Close/Last']
-df['low-high'] = df['Low'] - df['High']
-df['daily_return'] = df['Close/Last'].pct_change()
-df['is_quarter_end'] = np.where(df['month'] % 3 == 0, 1, 0)
+nvidia_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+nvidia_path = r"C:\Users\laure\.cache\kagglehub\datasets\programmerrdai\nvidia-stock-historical-data\versions\1\NVDA (1).csv"
 
+# Google data
+path4 = kagglehub.dataset_download("henryshan/google-stock-price")
 
-df['rsi'] = ta.momentum.RSIIndicator(df['Close/Last'], window=14).rsi()
-df['macd'] = ta.trend.MACD(df['Close/Last']).macd_diff()
-df['bollinger_h'] = ta.volatility.BollingerBands(df['Close/Last']).bollinger_hband()
-df['bollinger_l'] = ta.volatility.BollingerBands(df['Close/Last']).bollinger_lband()
-df['ema_12'] = ta.trend.EMAIndicator(df['Close/Last'], window=12).ema_indicator()
-df['ema_26'] = ta.trend.EMAIndicator(df['Close/Last'], window=26).ema_indicator()
+print("Path to dataset files:", path4)
 
+google_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+google_path = r"C:\Users\laure\.cache\kagglehub\datasets\henryshan\google-stock-price\versions\1\GOOG.csv"
 
-# Drop NA from pct_change
-df = df.dropna()
+# Meta data
+path5 = kagglehub.dataset_download("umerhaddii/meta-stock-data-2025")
 
+print("Path to dataset files:", path5)
 
-df.head()
+meta_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+meta_path = r"C:\Users\laure\.cache\kagglehub\datasets\umerhaddii\meta-stock-data-2025\versions\2\META stocks.csv"
 
+# Qualcomm data
+path6 = kagglehub.dataset_download("varunsaikanuri/qualcomm-stocks-historical-data")
 
-# Target: 1 if next day close is higher
-df['target'] = np.where(df['Close/Last'].shift(-1) > df['Close/Last'], 1, 0)
-df = df.dropna()
+print("Path to dataset files:", path6)
 
-# Define feature columns
-feature_cols = ['open-close', 'low-high', 'daily_return', 'Volume', 'is_quarter_end']
-X = df[feature_cols]
-y = df['target']
+qc_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+qc_path = r"C:\Users\laure\.cache\kagglehub\datasets\varunsaikanuri\qualcomm-stocks-historical-data\versions\19\Qualcomm_Stocks.csv"
 
+# Microsoft data
+path7 = kagglehub.dataset_download("umerhaddii/microsoft-stock-data-2025")
 
-# Scale
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+print("Path to dataset files:", path7)
 
+ms_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+ms_path = r"C:\Users\laure\.cache\kagglehub\datasets\umerhaddii\microsoft-stock-data-2025\versions\1\MSFT_1986-03-13_2025-02-04.csv"
+
+# Amazon data
+path8 = kagglehub.dataset_download("adilshamim8/amazon-stock-price-history")
+
+print("Path to dataset files:", path8)
+
+amazon_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+amazon_path = r"C:\Users\laure\.cache\kagglehub\datasets\adilshamim8\amazon-stock-price-history\versions\7\Amazon_stock_data.csv"
+
+# Samsung data
+path9 = kagglehub.dataset_download("caesarmario/samsung-electronics-stock-historical-price")
+
+print("Path to dataset files:", path9)
+
+samsung_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+samsung_path = r"C:\Users\laure\.cache\kagglehub\datasets\caesarmario\samsung-electronics-stock-historical-price\versions\873\005930.KS.csv"
+
+# Netflix data
+path0 = kagglehub.dataset_download("adilshamim8/netflix-stock-price-history")
+
+print("Path to dataset files:", path0)
+
+netflix_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
+netflix_path = r"C:\Users\laure\.cache\kagglehub\datasets\adilshamim8\netflix-stock-price-history\versions\8\Netflix_stock_data.csv"
+
+# Process the data, add features, and scale
+def data_process(path, col_names, scaler=None, fit_scaler=True):
+    df = pd.read_csv(path)
+
+    date = col_names[0]
+    opens = col_names[1]
+    high = col_names[2]
+    low = col_names[3]
+    close = col_names[4]
+    volume = col_names[5]
+
+    # Clean columns
+    names = [close, opens, high, low]
+    for col in names:
+        df[col] = df[col].replace('[/$]', '', regex=True).astype(float)
+
+    # Date features
+    if '-' in df[date][0]:
+        splitted = df[date].str.split('-', expand=True)
+        df['day'] = splitted[2].astype(int)
+        df['month'] = splitted[1].astype(int)
+        df['year'] = splitted[0].astype(int)
+    elif '/' in df[date][0]:
+        splitted = df[date].str.split('/', expand=True)
+        df['day'] = splitted[1].astype(int)
+        df['month'] = splitted[0].astype(int)
+        df['year'] = splitted[2].astype(int)
+
+    # Feature engineering
+    df['open-close'] = df[opens] - df[close]
+    df['low-high'] = df[low] - df[high]
+    df['daily_return'] = df[close].pct_change()
+    df['is_quarter_end'] = np.where(df['month'] % 3 == 0, 1, 0)
+    
+    # Technical indicators
+    df['rsi'] = ta.momentum.RSIIndicator(df[close], window=14).rsi()
+    df['macd'] = ta.trend.MACD(df[close]).macd_diff()
+    df['bollinger_h'] = ta.volatility.BollingerBands(df[close]).bollinger_hband()
+    df['bollinger_l'] = ta.volatility.BollingerBands(df[close]).bollinger_lband()
+    df['ema_12'] = ta.trend.EMAIndicator(df[close], window=12).ema_indicator()
+    df['ema_26'] = ta.trend.EMAIndicator(df[close], window=26).ema_indicator()
+
+    df.dropna(inplace=True)
+
+    # Create target
+    df['target'] = np.where(df[close].shift(-1) > df[close], 1, 0)
+    df.dropna(inplace=True)
+
+    feature_cols = ['open-close', 'low-high', 'daily_return', volume, 'is_quarter_end']
+    X = df[feature_cols]
+    y = df['target']
+
+    # Scale features
+    if scaler is None:
+        scaler = StandardScaler()
+
+    if fit_scaler:
+        X_scaled = scaler.fit_transform(X)
+    else:
+        X_scaled = scaler.transform(X)
+
+    return X_scaled, y, scaler
+
+# Call the processing function
+X_scaled, y, scaler = data_process(samsung_path, samsung_names)
 
 # Train/Test Split
 train_size = int(len(X_scaled) * 0.8)
@@ -85,7 +170,7 @@ X_valid_tensor = torch.tensor(X_valid, dtype=torch.float32)
 y_valid_tensor = torch.tensor(y_valid.values, dtype=torch.float32).unsqueeze(1)
 
 
-class StrongerMLP(nn.Module):
+class MLP(nn.Module):
     def __init__(self, input_dim):
         super().__init__()
         self.net = nn.Sequential(
@@ -103,14 +188,12 @@ class StrongerMLP(nn.Module):
     def forward(self, x):
         return self.net(x)
 
-model = StrongerMLP(input_dim=X_train.shape[1])
-
+model = MLP(input_dim=X_train.shape[1])
 
 criterion = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
 
-
-epochs = 100
+epochs = 500
 for epoch in range(epochs):
     model.train()
     optimizer.zero_grad()
@@ -135,12 +218,25 @@ for epoch in range(epochs):
     print(f"Epoch {epoch+1}/{epochs}, Loss: {loss.item():.4f}, Train Acc: {train_acc:.4f}, Val Accuracy: {val_acc:.4f}")
 
 
+# Test the model
+
+X_test_scaled, y_test, s = data_process(tesla_path, tesla_names, scaler=scaler, fit_scaler=False)
+
+# Convert test data to PyTorch tensors
+X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
+y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32).unsqueeze(1)
+
 model.eval()
+
+# Get predictions
 with torch.no_grad():
-    preds = model(X_valid_tensor)
-    preds_prob = torch.sigmoid(preds)
-    preds_cls = (preds_prob > 0.5).float()
+    test_outputs = model(X_test_tensor)
+    test_probs = torch.sigmoid(test_outputs)
+    test_preds_cls = (test_probs > 0.5).float()
 
-print("Classification Report:")
-print(classification_report(y_valid_tensor, preds_cls))
+# Print classification report
+from sklearn.metrics import classification_report, accuracy_score
 
+print("Test Accuracy:", accuracy_score(y_test_tensor, test_preds_cls))
+print("Classification Report on Test Data:")
+print(classification_report(y_test_tensor, test_preds_cls))
