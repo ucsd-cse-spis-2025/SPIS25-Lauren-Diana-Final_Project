@@ -156,7 +156,7 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     return X_scaled, y, scaler
 
 # Call the processing function
-X_scaled, y, scaler = data_process(nvidia_path, nvidia_names)
+X_scaled, y, scaler = data_process(tesla_path, tesla_names)
 
 # Train/Test Split
 train_size = int(len(X_scaled) * 0.8)
