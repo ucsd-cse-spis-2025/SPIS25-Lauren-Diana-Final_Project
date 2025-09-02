@@ -156,10 +156,10 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     else:
         X_scaled = scaler.transform(X)
 
-    return X_scaled, y, scaler, df
+    return X_scaled, y, scaler
 
 # Call the processing function
-X_scaled, y, scaler, df = data_process(tesla_path, tesla_names)
+X_scaled, y, scaler = data_process(tesla_path, tesla_names)
 
 
 # Train/Test Split
@@ -253,7 +253,7 @@ print(classification_report(y_test_tensor, test_preds_cls))
 
 def predict_next_day(model, scaler, path, col_names):
     # Only get latest row of data
-    X_new_scaled, y_new, s, df = data_process(path, col_names, scaler=scaler, fit_scaler=False)
+    X_new_scaled, y_new, s = data_process(path, col_names, scaler=scaler, fit_scaler=False)
 
     # Use the yesterday's features
     latest_features = X_new_scaled[-1].reshape(1, -1)
