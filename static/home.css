@@ -1,0 +1,41 @@
+/* Whole page background + font */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: linear-gradient(135deg, #6ba4ea, #c54040);
+  color: white;
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Header styles */
+header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+}
+
+/* Button style */
+.enter-button {
+  display: inline-block;
+  padding: 15px 30px;
+  background-color: #007BFF;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.enter-button:hover {
+  transform: scale(1.05);
+  background-color: #0056b3;
+}
