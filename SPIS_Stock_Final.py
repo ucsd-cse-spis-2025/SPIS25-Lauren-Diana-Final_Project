@@ -194,7 +194,7 @@ model = MLP(input_dim=X_train.shape[1])
 criterion = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
 
-epochs = 500
+epochs = 100
 for epoch in range(epochs):
     model.train()
     optimizer.zero_grad()
