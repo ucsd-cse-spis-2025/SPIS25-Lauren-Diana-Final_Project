@@ -104,6 +104,9 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     close = col_names[4]
     volume = col_names[5]
 
+    if "Close/Last" in col_names:
+        df["Close"] = df["Close/Last"]
+
     # Clean columns
     names = [close, opens, high, low]
     for col in names:
@@ -128,14 +131,6 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     df['low-high'] = df[low] - df[high]
     df['daily_return'] = df[close].pct_change()
     df['is_quarter_end'] = np.where(df['month'] % 3 == 0, 1, 0)
-    
-    # Technical indicators
-    df['rsi'] = ta.momentum.RSIIndicator(df[close], window=14).rsi()
-    df['macd'] = ta.trend.MACD(df[close]).macd_diff()
-    df['bollinger_h'] = ta.volatility.BollingerBands(df[close]).bollinger_hband()
-    df['bollinger_l'] = ta.volatility.BollingerBands(df[close]).bollinger_lband()
-    df['ema_12'] = ta.trend.EMAIndicator(df[close], window=12).ema_indicator()
-    df['ema_26'] = ta.trend.EMAIndicator(df[close], window=26).ema_indicator()
 
     df.dropna(inplace=True)
 
@@ -158,8 +153,10 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
 
     return X_scaled, y, scaler
 
-# Call the processing function
+# Call the processing function on all stocks
 X_scaled, y, scaler = data_process(tesla_path, tesla_names)
+
+# Combine all stocks into one dataframe
 
 
 # Train/Test Split
@@ -249,7 +246,7 @@ print("Classification Report on Test Data:")
 print(classification_report(y_test_tensor, test_preds_cls))
 '''
 
-# Print future predictions
+# Print future prediction from the current dataset
 
 def predict_next_day(model, scaler, path, col_names):
     # Only get latest row of data
@@ -268,3 +265,31 @@ def predict_next_day(model, scaler, path, col_names):
 
     return prediction, prob
 
+# Print future prediction from user input
+
+def predict_from_input(model, scaler, open_price, high, low, close, volume, date_str):
+
+    # Process date
+    date = pd.to_datetime(date_str)
+    month = date.month
+
+    # Features (must match training!)
+    open_close = open_price - close
+    low_high = low - high
+    daily_return = 0  # can't compute with 1 data point
+    is_quarter_end = 1 if month % 3 == 0 else 0
+
+    features = np.array([[open_close, low_high, daily_return, volume, is_quarter_end]])
+    features_scaled = scaler.transform(features)
+
+    # Convert to tensor
+    input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
+
+    # Predict
+    model.eval()
+    with torch.no_grad():
+        output = model(input_tensor)
+        prob = torch.sigmoid(output).item()
+        prediction = "UP" if prob > 0.5 else "DOWN"
+
+    return prediction, prob

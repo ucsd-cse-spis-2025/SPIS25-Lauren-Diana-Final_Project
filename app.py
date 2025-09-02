@@ -1,6 +1,5 @@
-from flask import Flask, render_template
-from SPIS_Stock_Final import model, predict_next_day, scaler 
-from SPIS_Stock_Final import tesla_path, tesla_names, apple_path, apple_names, nvidia_path, nvidia_names, google_path, google_names, meta_path, meta_names, qc_path, qc_names, ms_path, ms_names, amazon_path, amazon_names, samsung_path, samsung_names, netflix_path, netflix_names
+from flask import Flask, render_template, request
+from SPIS_Stock_Final import model, predict_next_day, predict_from_input, scaler
 
 app = Flask(__name__)
 
@@ -12,85 +11,32 @@ def render_home():
 def render_main():
     return render_template('main.html')
 
-@app.route('/predict/tesla', methods=['POST'])
-def predict_tesla():
-    prediction, confidence = predict_next_day(model, scaler, tesla_path, tesla_names)
-    return render_template('result.html', 
-                           stock_name="Tesla", 
-                           prediction=prediction, 
+@app.route('/predict/<stock>', methods=['GET'])
+def render_form(stock):
+    stock_name = stock.capitalize()
+    return render_template('form.html', stock_name=stock_name, stock_route=f"/predict/{stock}/result")
+
+@app.route('/predict/<stock>/result', methods=['POST'])
+def handle_prediction(stock):
+    stock_name = stock.capitalize()
+
+    try:
+        open_price = float(request.form['open'])
+        high = float(request.form['high'])
+        low = float(request.form['low'])
+        close = float(request.form['close'])
+        volume = float(request.form['volume'])
+        date_str = request.form['date']
+    except (KeyError, ValueError) as e:
+        "Sorry: something went wrong."
+
+    prediction, confidence = predict_from_input(model, scaler, open_price, high, low, close, volume, date_str)
+
+    return render_template('result.html',
+                           stock_name=stock_name,
+                           prediction=prediction,
                            confidence=round(confidence, 2))
 
-@app.route('/predict/apple', methods=['POST'])
-def predict_apple():
-    prediction, confidence = predict_next_day(model, scaler, apple_path, apple_names)
-    return render_template('result.html', 
-                           stock_name="Apple", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/nvidia', methods=['POST'])
-def predict_nvidia():
-    prediction, confidence = predict_next_day(model, scaler, nvidia_path, nvidia_names)
-    return render_template('result.html', 
-                           stock_name="Nvidia", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/google', methods=['POST'])
-def predict_google():
-    prediction, confidence = predict_next_day(model, scaler, google_path, google_names)
-    return render_template('result.html', 
-                           stock_name="Google", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/meta', methods=['POST'])
-def predict_meta():
-    prediction, confidence = predict_next_day(model, scaler, meta_path, meta_names)
-    return render_template('result.html', 
-                           stock_name="Meta", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/qualcomm', methods=['POST'])
-def predict_qualcomm():
-    prediction, confidence = predict_next_day(model, scaler, qc_path, qc_names)
-    return render_template('result.html', 
-                           stock_name="Qualcomm", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/microsoft', methods=['POST'])
-def predict_microsoft():
-    prediction, confidence = predict_next_day(model, scaler, ms_path, ms_names)
-    return render_template('result.html', 
-                           stock_name="Microsoft", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/amazon', methods=['POST'])
-def predict_amazon():
-    prediction, confidence = predict_next_day(model, scaler, amazon_path, amazon_names)
-    return render_template('result.html', 
-                           stock_name="Amazon", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/samsung', methods=['POST'])
-def predict_samsung():
-    prediction, confidence = predict_next_day(model, scaler, samsung_path, samsung_names)
-    return render_template('result.html', 
-                           stock_name="Samsung", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
-@app.route('/predict/netflix', methods=['POST'])
-def predict_netflix():
-    prediction, confidence = predict_next_day(model, scaler, netflix_path, netflix_names)
-    return render_template('result.html', 
-                           stock_name="Netflix", 
-                           prediction=prediction, 
-                           confidence=round(confidence, 2))
-
+                           
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
