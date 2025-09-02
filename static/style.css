@@ -1,3 +1,7 @@
+#main {
+  display: none; /* hide main content initially */
+  transform: translateY(0);
+}
 body {
     background-color: #6ba4ea;
     color: rgb(0, 0, 0);
@@ -38,4 +42,38 @@ body {
     height: 60px;
     object-fit: contain;
     margin-bottom: 10px;
+}
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  font-family: sans-serif;
+}
+
+section {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.6s ease; /* smooth slide */
+}
+
+#intro {
+  background: linear-gradient(135deg, #6ba4ea, #c54040);
+  color: white;
+}
+
+#main {
+  background: #f0f0f0;
+  color: black;
+}
+#intro h1, #intro p {
+  transition: opacity 0.6s ease;
+}
+
+#intro.slide-up h1,
+#intro.slide-up p {
+  opacity: 0;
 }
