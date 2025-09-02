@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
 import ta
+import matplotlib.pyplot as plt
 
 import kagglehub
 
@@ -120,6 +121,8 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
         df['month'] = splitted[0].astype(int)
         df['year'] = splitted[2].astype(int)
 
+    df[date] = pd.to_datetime(df[date])
+
     # Feature engineering
     df['open-close'] = df[opens] - df[close]
     df['low-high'] = df[low] - df[high]
@@ -153,10 +156,11 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     else:
         X_scaled = scaler.transform(X)
 
-    return X_scaled, y, scaler
+    return X_scaled, y, scaler, df
 
 # Call the processing function
-X_scaled, y, scaler = data_process(tesla_path, tesla_names)
+X_scaled, y, scaler, df = data_process(tesla_path, tesla_names)
+
 
 # Train/Test Split
 train_size = int(len(X_scaled) * 0.8)
@@ -222,7 +226,7 @@ for epoch in range(epochs):
 # Test the model with new data
 
 # Process the data
-X_test_scaled, y_test, s = data_process(nvidia_path, nvidia_names, scaler=scaler, fit_scaler=False)
+X_test_scaled, y_test, s, df = data_process(nvidia_path, nvidia_names, scaler=scaler, fit_scaler=False)
 
 # Convert test data to PyTorch tensors
 X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
@@ -249,7 +253,7 @@ print(classification_report(y_test_tensor, test_preds_cls))
 
 def predict_next_day(model, scaler, path, col_names):
     # Only get latest row of data
-    X_new_scaled, y_new, s = data_process(path, col_names, scaler=scaler, fit_scaler=False)
+    X_new_scaled, y_new, s, df = data_process(path, col_names, scaler=scaler, fit_scaler=False)
 
     # Use the yesterday's features
     latest_features = X_new_scaled[-1].reshape(1, -1)
@@ -262,4 +266,5 @@ def predict_next_day(model, scaler, path, col_names):
         prob = torch.sigmoid(output).item()
         prediction = "UP" if prob > 0.5 else "DOWN"
 
-    return prediction, prob
+    return prediction, prob, df
+
