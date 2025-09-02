@@ -4,25 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPIS Stocks</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='favicon.jpg') }}">
-<!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">   
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">   
 </head>
 <body>
-    <h1 style ="text-align: center;" >Below are our suggestions to which you should take with caution!!</h1>
-    <a href="/predict/tesla"><button>Tesla</button></a>
-    <a href="/predict/apple"><button>Apple</button></a>
-    <a href="/predict/nvidia"><button>Nvidia</button></a>
-    <a href="/predict/google"><button>Google</button></a>
-    <a href="/predict/meta"><button>Meta</button></a>
-    <a href="/predict/qualcomm"><button>Qualcomm</button></a>
-    <a href="/predict/microsoft"><button>Microsoft</button></a>
-    <a href="/predict/amazon"><button>Amazon</button></a>
-    <a href="/predict/samsung"><button>Samsung</button></a>
-    <a href="/predict/netflix"><button>Netflix</button></a>
-    <a href="/", id="child1"><button>Take me back to the intro page</button></a>
+    <div class="container text-center mt-5">
+        <h1 class="mb-4">Below are our suggestions — take them with caution!</h1>
+
+        <div class="button-grid">
+            <!-- Tesla -->
+            <form action="/predict/tesla" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/tesla.png') }}" alt="Tesla">
+                    Tesla
+                </button>
+            </form>
+
+            <!-- Apple -->
+            <form action="/predict/apple" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/apple.png') }}" alt="Apple">
+                    Apple
+                </button>
+            </form>
+
+            <!-- Nvidia -->
+            <form action="/predict/nvidia" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/nvidia.png') }}" alt="Nvidia">
+                    Nvidia
+                </button>
+            </form>
+
+            <!-- Google -->
+            <form action="/predict/google" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/google.png') }}" alt="Google">
+                    Google
+                </button>
+            </form>
+
+            <!-- Meta -->
+            <form action="/predict/meta" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/meta.png') }}" alt="Meta">
+                    Meta
+                </button>
+            </form>
+
+            <!-- Qualcomm -->
+            <form action="/predict/qualcomm" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/qualcomm.png') }}" alt="Qualcomm">
+                    Qualcomm
+                </button>
+            </form>
+
+            <!-- Microsoft -->
+            <form action="/predict/microsoft" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/microsoft.png') }}" alt="Microsoft">
+                    Microsoft
+                </button>
+            </form>
+
+            <!-- Amazon -->
+            <form action="/predict/amazon" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/amazon.png') }}" alt="Amazon">
+                    Amazon
+                </button>
+            </form>
+
+            <!-- Samsung -->
+            <form action="/predict/samsung" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/samsung.png') }}" alt="Samsung">
+                    Samsung
+                </button>
+            </form>
+
+            <!-- Netflix -->
+            <form action="/predict/netflix" method="post">
+                <button class="stock-button" type="submit">
+                    <img src="{{ url_for('static', filename='logos/netflix.png') }}" alt="Netflix">
+                    Netflix
+                </button>
+            </form>
+        </div>
+
+        <div class="mt-5">
+            <a href="/" class="btn btn-secondary btn-lg">Take me back to the intro page</a>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

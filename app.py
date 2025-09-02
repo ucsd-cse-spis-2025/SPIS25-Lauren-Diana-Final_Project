@@ -12,52 +12,52 @@ def render_home():
 def render_main():
     return render_template('main.html')
 
-@app.route('/predict/tesla')
+@app.route('/predict/tesla', methods=['POST'])
 def predict_tesla():
     prediction, confidence = predict_next_day(model, scaler, tesla_path, tesla_names)
     return render_template('tesla.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/apple')
+@app.route('/predict/apple', methods=['POST'])
 def predict_apple():
     prediction, confidence = predict_next_day(model, scaler, apple_path, apple_names)
     return render_template('apple.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/nvidia')
+@app.route('/predict/nvidia', methods=['POST'])
 def predict_nvidia():
     prediction, confidence = predict_next_day(model, scaler, nvidia_path, nvidia_names)
     return render_template('nvidia.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/google')
+@app.route('/predict/google', methods=['POST'])
 def predict_google():
     prediction, confidence = predict_next_day(model, scaler, google_path, google_names)
     return render_template('google.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/meta')
+@app.route('/predict/meta', methods=['POST'])
 def predict_meta():
     prediction, confidence = predict_next_day(model, scaler, meta_path, meta_names)
     return render_template('meta.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/qualcomm')
+@app.route('/predict/qualcomm', methods=['POST'])
 def predict_qualcomm():
     prediction, confidence = predict_next_day(model, scaler, qc_path, qc_names)
     return render_template('qualcomm.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/microsoft')
+@app.route('/predict/microsoft', methods=['POST'])
 def predict_microsoft():
     prediction, confidence = predict_next_day(model, scaler, ms_path, ms_names)
     return render_template('microsoft.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/amazon')
+@app.route('/predict/amazon', methods=['POST'])
 def predict_amazon():
     prediction, confidence = predict_next_day(model, scaler, amazon_path, amazon_names)
     return render_template('amazon.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/samsung')
+@app.route('/predict/samsung', methods=['POST'])
 def predict_samsung():
     prediction, confidence = predict_next_day(model, scaler, samsung_path, samsung_names)
     return render_template('samsung.html', prediction=prediction, confidence=round(confidence, 2))
 
-@app.route('/predict/netflix')
+@app.route('/predict/netflix', methods=['POST'])
 def predict_netflix():
     prediction, confidence = predict_next_day(model, scaler, netflix_path, netflix_names)
     return render_template('netflix.html', prediction=prediction, confidence=round(confidence, 2))\
