@@ -159,17 +159,9 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     return X_scaled, y, scaler, df
 
 # Call the processing function
-X_scaled, y, scaler, df = data_process(apple_path, apple_names)
-
-plt.figure(figsize=(15,5))
-plt.plot(df['Date'], df['Close'])
-plt.title('Apple Closing Values Over Time', fontsize=15)
-plt.ylabel('Price in dollars')
-plt.xlabel('Year')
-plt.show()
+X_scaled, y, scaler, df = data_process(tesla_path, tesla_names)
 
 
-''''
 # Train/Test Split
 train_size = int(len(X_scaled) * 0.8)
 X_train, X_valid = X_scaled[:train_size], X_scaled[train_size:]
@@ -230,7 +222,7 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1}/{epochs}, Loss: {loss.item():.4f}, Train Acc: {train_acc:.4f}, Val Accuracy: {val_acc:.4f}")
 
-
+'''
 # Test the model with new data
 
 # Process the data
@@ -255,7 +247,7 @@ from sklearn.metrics import classification_report, accuracy_score
 print("Test Accuracy:", accuracy_score(y_test_tensor, test_preds_cls))
 print("Classification Report on Test Data:")
 print(classification_report(y_test_tensor, test_preds_cls))
-
+'''
 
 # Print future predictions
 
@@ -276,4 +268,3 @@ def predict_next_day(model, scaler, path, col_names):
 
     return prediction, prob, df
 
-'''
