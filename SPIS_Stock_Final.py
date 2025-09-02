@@ -266,5 +266,5 @@ def predict_next_day(model, scaler, path, col_names):
         prob = torch.sigmoid(output).item()
         prediction = "UP" if prob > 0.5 else "DOWN"
 
-    return prediction, prob, df
+    return prediction, prob
 
