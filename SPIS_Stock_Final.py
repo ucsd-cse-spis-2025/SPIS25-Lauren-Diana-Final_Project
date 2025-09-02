@@ -93,8 +93,8 @@ print("Path to dataset files:", path0)
 netflix_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
 netflix_path = r"C:\Users\laure\.cache\kagglehub\datasets\adilshamim8\netflix-stock-price-history\versions\8\Netflix_stock_data.csv"
 
-# Process the data, add features, and scale
-def data_process(path, col_names, scaler=None, fit_scaler=True):
+# Process the data and add columns
+def data_cleaning(stock, path, col_names):
     df = pd.read_csv(path)
 
     date = col_names[0]
@@ -104,8 +104,11 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     close = col_names[4]
     volume = col_names[5]
 
-    if "Close/Last" in col_names:
+    df["stock_id"] = stock
+
+    if close == "Close/Last":
         df["Close"] = df["Close/Last"]
+        close = "Close"
 
     # Clean columns
     names = [close, opens, high, low]
@@ -138,7 +141,11 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     df['target'] = np.where(df[close].shift(-1) > df[close], 1, 0)
     df.dropna(inplace=True)
 
-    feature_cols = ['open-close', 'low-high', 'daily_return', volume, 'is_quarter_end']
+    return df
+
+# Declare features and scale
+def data_processing(df, scaler=None, fit_scaler=True):
+    feature_cols = ['open-close', 'low-high', 'daily_return', 'Volume', 'is_quarter_end', 'stock_id']
     X = df[feature_cols]
     y = df['target']
 
@@ -153,11 +160,19 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
 
     return X_scaled, y, scaler
 
+# Create combined dataframe
+paths = [tesla_path, apple_path, nvidia_path, google_path, meta_path, qc_path, ms_path, amazon_path, samsung_path, netflix_path]
+names = [tesla_names, apple_names, nvidia_names, google_names, meta_names, qc_names, ms_names, amazon_names, samsung_names, netflix_names]
+
+stock_data = pd.DataFrame()
+
+for i in range(len(paths)):
+    df = pd.read_csv(paths[i])
+    df = data_cleaning(i, paths[i], names[i])
+    stock_data = pd.concat([stock_data,df],ignore_index=True)
+
 # Call the processing function on all stocks
-X_scaled, y, scaler = data_process(tesla_path, tesla_names)
-
-# Combine all stocks into one dataframe
-
+X_scaled, y, scaler = data_processing(stock_data)
 
 # Train/Test Split
 train_size = int(len(X_scaled) * 0.8)
@@ -223,7 +238,8 @@ for epoch in range(epochs):
 # Test the model with new data
 
 # Process the data
-X_test_scaled, y_test, s, df = data_process(nvidia_path, nvidia_names, scaler=scaler, fit_scaler=False)
+df = data_cleaning("nvidia", nvidia_path, nvidia_names)
+X_new_scaled, y_new, s = data_processing(df, scaler=scaler, fit_scaler=False)
 
 # Convert test data to PyTorch tensors
 X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
@@ -246,11 +262,12 @@ print("Classification Report on Test Data:")
 print(classification_report(y_test_tensor, test_preds_cls))
 '''
 
+'''
 # Print future prediction from the current dataset
-
-def predict_next_day(model, scaler, path, col_names):
+def predict_next_day(stock, model, scaler, path, col_names):
     # Only get latest row of data
-    X_new_scaled, y_new, s = data_process(path, col_names, scaler=scaler, fit_scaler=False)
+    df = data_cleaning(stock, path, col_names)
+    X_new_scaled, y_new, s = data_processing(df, scaler=scaler, fit_scaler=False)
 
     # Use the yesterday's features
     latest_features = X_new_scaled[-1].reshape(1, -1)
@@ -264,10 +281,11 @@ def predict_next_day(model, scaler, path, col_names):
         prediction = "UP" if prob > 0.5 else "DOWN"
 
     return prediction, prob
+'''
 
 # Print future prediction from user input
-
-def predict_from_input(model, scaler, open_price, high, low, close, volume, date_str):
+def predict_from_input(stock_name, model, scaler, open_price, high, low, close, volume, date_str):
+    stock_list = ["tesla", "apple", "nvidia", "google", "meta", "qualcomm", "microsoft", "amazon", "samsung", "netflix"]
 
     # Process date
     date = pd.to_datetime(date_str)
@@ -278,8 +296,9 @@ def predict_from_input(model, scaler, open_price, high, low, close, volume, date
     low_high = low - high
     daily_return = 0  # can't compute with 1 data point
     is_quarter_end = 1 if month % 3 == 0 else 0
+    stock_id = stock_list.index(stock_name)
 
-    features = np.array([[open_close, low_high, daily_return, volume, is_quarter_end]])
+    features = np.array([[open_close, low_high, daily_return, volume, is_quarter_end, stock_id]])
     features_scaled = scaler.transform(features)
 
     # Convert to tensor

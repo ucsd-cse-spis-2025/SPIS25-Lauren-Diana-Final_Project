@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from SPIS_Stock_Final import model, predict_next_day, predict_from_input, scaler
+from SPIS_Stock_Final import model, predict_from_input, scaler
 
 app = Flask(__name__)
 
@@ -19,6 +19,7 @@ def render_form(stock):
 @app.route('/predict/<stock>/result', methods=['POST'])
 def handle_prediction(stock):
     stock_name = stock.capitalize()
+    stock_ref = stock.lower()
 
     try:
         open_price = float(request.form['open'])
@@ -30,7 +31,7 @@ def handle_prediction(stock):
     except (KeyError, ValueError) as e:
         "Sorry: something went wrong."
 
-    prediction, confidence = predict_from_input(model, scaler, open_price, high, low, close, volume, date_str)
+    prediction, confidence = predict_from_input(stock_ref, model, scaler, open_price, high, low, close, volume, date_str)
 
     return render_template('result.html',
                            stock_name=stock_name,
