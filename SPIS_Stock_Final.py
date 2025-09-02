@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
 import ta
+import matplotlib.pyplot as plt
 
 import kagglehub
 
@@ -120,6 +121,8 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
         df['month'] = splitted[0].astype(int)
         df['year'] = splitted[2].astype(int)
 
+    df[date] = pd.to_datetime(df[date])
+
     # Feature engineering
     df['open-close'] = df[opens] - df[close]
     df['low-high'] = df[low] - df[high]
@@ -153,11 +156,20 @@ def data_process(path, col_names, scaler=None, fit_scaler=True):
     else:
         X_scaled = scaler.transform(X)
 
-    return X_scaled, y, scaler
+    return X_scaled, y, scaler, df
 
 # Call the processing function
-X_scaled, y, scaler = data_process(tesla_path, tesla_names)
+X_scaled, y, scaler, df = data_process(apple_path, apple_names)
 
+plt.figure(figsize=(15,5))
+plt.plot(df['Date'], df['Close'])
+plt.title('Apple Closing Values Over Time', fontsize=15)
+plt.ylabel('Price in dollars')
+plt.xlabel('Year')
+plt.show()
+
+
+''''
 # Train/Test Split
 train_size = int(len(X_scaled) * 0.8)
 X_train, X_valid = X_scaled[:train_size], X_scaled[train_size:]
@@ -218,11 +230,11 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1}/{epochs}, Loss: {loss.item():.4f}, Train Acc: {train_acc:.4f}, Val Accuracy: {val_acc:.4f}")
 
-'''
+
 # Test the model with new data
 
 # Process the data
-X_test_scaled, y_test, s = data_process(nvidia_path, nvidia_names, scaler=scaler, fit_scaler=False)
+X_test_scaled, y_test, s, df = data_process(nvidia_path, nvidia_names, scaler=scaler, fit_scaler=False)
 
 # Convert test data to PyTorch tensors
 X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
@@ -243,13 +255,13 @@ from sklearn.metrics import classification_report, accuracy_score
 print("Test Accuracy:", accuracy_score(y_test_tensor, test_preds_cls))
 print("Classification Report on Test Data:")
 print(classification_report(y_test_tensor, test_preds_cls))
-'''
+
 
 # Print future predictions
 
 def predict_next_day(model, scaler, path, col_names):
     # Only get latest row of data
-    X_new_scaled, y_new, s = data_process(path, col_names, scaler=scaler, fit_scaler=False)
+    X_new_scaled, y_new, s, df = data_process(path, col_names, scaler=scaler, fit_scaler=False)
 
     # Use the yesterday's features
     latest_features = X_new_scaled[-1].reshape(1, -1)
@@ -262,4 +274,6 @@ def predict_next_day(model, scaler, path, col_names):
         prob = torch.sigmoid(output).item()
         prediction = "UP" if prob > 0.5 else "DOWN"
 
-    return prediction, prob
+    return prediction, prob, df
+
+'''
