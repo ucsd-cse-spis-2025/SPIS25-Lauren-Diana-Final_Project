@@ -108,6 +108,7 @@ def data_cleaning(stock, path, col_names):
 
     df["stock_id"] = stock_list.index(stock)
 
+    # Tesla dataset where coloumn is called "Close/Last"
     if close == "Close/Last":
         df["Close"] = df["Close/Last"]
         close = "Close"
@@ -129,6 +130,7 @@ def data_cleaning(stock, path, col_names):
         df['month'] = splitted[0].astype(int)
         df['year'] = splitted[2].astype(int)
 
+    # Change date to date time object for graphs
     df[date] = pd.to_datetime(df[date])
 
     # Feature engineering
