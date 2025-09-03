@@ -95,6 +95,8 @@ netflix_path = r"C:\Users\laure\.cache\kagglehub\datasets\adilshamim8\netflix-st
 
 # Process the data and add columns
 def data_cleaning(stock, path, col_names):
+    stock_list = ["tesla", "apple", "nvidia", "google", "meta", "qualcomm", "microsoft", "amazon", "samsung", "netflix"]
+
     df = pd.read_csv(path)
 
     date = col_names[0]
@@ -104,7 +106,7 @@ def data_cleaning(stock, path, col_names):
     close = col_names[4]
     volume = col_names[5]
 
-    df["stock_id"] = stock
+    df["stock_id"] = stock_list.index(stock)
 
     if close == "Close/Last":
         df["Close"] = df["Close/Last"]
@@ -137,6 +139,10 @@ def data_cleaning(stock, path, col_names):
 
     df.dropna(inplace=True)
 
+    # Normalize the data (just in case)
+    for col in ['open-close', 'low-high', 'daily_return']:
+        df[col] = (df[col] - df[col].mean()) / df[col].std()
+
     # Create target
     df['target'] = np.where(df[close].shift(-1) > df[close], 1, 0)
     df.dropna(inplace=True)
@@ -160,25 +166,24 @@ def data_processing(df, scaler=None, fit_scaler=True):
 
     return X_scaled, y, scaler
 
-# Create combined dataframe
+# Create train and test dataframes using combined data
 paths = [tesla_path, apple_path, nvidia_path, google_path, meta_path, qc_path, ms_path, amazon_path, samsung_path, netflix_path]
 names = [tesla_names, apple_names, nvidia_names, google_names, meta_names, qc_names, ms_names, amazon_names, samsung_names, netflix_names]
+stock_list = ["tesla", "apple", "nvidia", "google", "meta", "qualcomm", "microsoft", "amazon", "samsung", "netflix"]
 
-stock_data = pd.DataFrame()
+train_df = pd.DataFrame()
+test_df = pd.DataFrame()
 
 for i in range(len(paths)):
-    df = pd.read_csv(paths[i])
-    df = data_cleaning(i, paths[i], names[i])
-    stock_data = pd.concat([stock_data,df],ignore_index=True)
+    df = data_cleaning(stock_list[i], paths[i], names[i])
+    
+    split_index = int(len(df) * 0.8)
+    train_df = pd.concat([train_df, df.iloc[:split_index]], ignore_index=True)
+    test_df = pd.concat([test_df, df.iloc[split_index:]], ignore_index=True)
 
-# Call the processing function on all stocks
-X_scaled, y, scaler = data_processing(stock_data)
-
-# Train/Test Split
-train_size = int(len(X_scaled) * 0.8)
-X_train, X_valid = X_scaled[:train_size], X_scaled[train_size:]
-y_train, y_valid = y[:train_size], y[train_size:]
-
+# Scale and define features for training and validation sets
+X_train, y_train, scaler = data_processing(train_df)
+X_valid, y_valid, s = data_processing(test_df, scaler=scaler, fit_scaler=False)
 
 # Convert to tensors
 X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
@@ -238,8 +243,8 @@ for epoch in range(epochs):
 # Test the model with new data
 
 # Process the data
-df = data_cleaning("nvidia", nvidia_path, nvidia_names)
-X_new_scaled, y_new, s = data_processing(df, scaler=scaler, fit_scaler=False)
+df = data_cleaning("tesla", tesla_path, tesla_names)
+X_test_scaled, y_test, s = data_processing(df, scaler=scaler, fit_scaler=False)
 
 # Convert test data to PyTorch tensors
 X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
@@ -262,7 +267,7 @@ print("Classification Report on Test Data:")
 print(classification_report(y_test_tensor, test_preds_cls))
 '''
 
-'''
+
 # Print future prediction from the current dataset
 def predict_next_day(stock, model, scaler, path, col_names):
     # Only get latest row of data
@@ -281,7 +286,6 @@ def predict_next_day(stock, model, scaler, path, col_names):
         prediction = "UP" if prob > 0.5 else "DOWN"
 
     return prediction, prob
-'''
 
 # Print future prediction from user input
 def predict_from_input(stock_name, model, scaler, open_price, high, low, close, volume, date_str):
@@ -309,6 +313,14 @@ def predict_from_input(stock_name, model, scaler, open_price, high, low, close, 
     with torch.no_grad():
         output = model(input_tensor)
         prob = torch.sigmoid(output).item()
-        prediction = "UP" if prob > 0.5 else "DOWN"
+
+        if prob > 0.5:
+            prediction = "UP"
+        else:
+            prediction = "DOWN"
+            prob = 1 - prob
+
+        if prob == 1.0:
+            prob = .99
 
     return prediction, prob

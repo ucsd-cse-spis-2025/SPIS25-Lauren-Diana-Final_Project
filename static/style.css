@@ -43,6 +43,42 @@ body {
     object-fit: contain;
     margin-bottom: 10px;
 }
+
+.alert.d-inline-block {
+  width: 400px;
+  height: 150px;
+}
+
+.btn.btn-primary {
+  display: inline-block;
+  padding: 7px 20px;
+  background-color: #749ad9;
+  color: white;
+  font-size: 1rem;
+  font-weight: normal;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.badge.bg-success {
+  width: 400px;
+  height: 110px;
+  background-color: #6ba4ea;
+  color:#ffffff;
+  font-size: 1.8rem;
+  font-weight: normal;
+}
+
+.badge.bg-danger {
+  width: 400px;
+  height: 110px;
+  background-color: #c54040;
+  color:#ffffff;
+  font-size: 1.8rem;
+  font-weight: normal;
+}
+
 body, html {
   margin: 0;
   padding: 0;

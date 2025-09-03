@@ -28,8 +28,9 @@ def handle_prediction(stock):
         close = float(request.form['close'])
         volume = float(request.form['volume'])
         date_str = request.form['date']
+        assert (open_price > 0 and high > 0 and low > 0 and close > 0 and volume > 0)
     except (KeyError, ValueError) as e:
-        "Sorry: something went wrong."
+        return "Invalid input", 400
 
     prediction, confidence = predict_from_input(stock_ref, model, scaler, open_price, high, low, close, volume, date_str)
 
