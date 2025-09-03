@@ -14,3 +14,9 @@ function slideUp() {
 
 // Click anywhere on intro to slide up
 intro.addEventListener('click', slideUp);
+
+
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
