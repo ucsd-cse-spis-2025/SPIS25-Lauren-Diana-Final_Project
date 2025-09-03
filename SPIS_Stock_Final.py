@@ -130,9 +130,6 @@ def data_cleaning(stock, path, col_names):
         df['month'] = splitted[0].astype(int)
         df['year'] = splitted[2].astype(int)
 
-    # Change date to date time object for graphs
-    df[date] = pd.to_datetime(df[date])
-
     # Feature engineering
     df['open-close'] = df[opens] - df[close]
     df['low-high'] = df[low] - df[high]

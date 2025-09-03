@@ -46,7 +46,7 @@ body {
 
 .alert.d-inline-block {
   width: 400px;
-  height: 150px;
+  height: 200px;
 }
 
 .btn.btn-primary {
@@ -128,20 +128,28 @@ section {
   cursor: pointer;
 }
 
+.popuptext.show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
 /* The actual popup (appears on top) */
 .popup .popuptext {
   visibility: hidden;
-  width: 160px;
+  width: 250px;
+  height: 48px;
   background-color: #555;
   color: #fff;
+  font-size: 12px;
   text-align: center;
   border-radius: 6px;
   padding: 8px 0;
   position: absolute;
   z-index: 1;
   bottom: 125%;
-  left: 50%;
-  margin-left: -80px;
+  left: 0;
+  transform: translateX(0);
 }
 
 /* Popup arrow */
@@ -149,12 +157,13 @@ section {
   content: "";
   position: absolute;
   top: 100%;
-  left: 50%;
-  margin-left: -5px;
+  left: 10px;
+  margin-left: 0; 
   border-width: 5px;
   border-style: solid;
   border-color: #555 transparent transparent transparent;
 }
+
 
 /* Toggle this class when clicking on the popup container (hide and show the popup) */
 .popup .show {

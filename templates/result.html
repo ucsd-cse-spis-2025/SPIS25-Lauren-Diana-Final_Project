@@ -10,30 +10,40 @@
 </head>
 
 <body>
+  <!-- displays and gets prediction and confidence & displays pop up with extra information-->
   <div class="container text-center mt-5">
     <h1>{{ stock_name }} Prediction</h1>
     <h3>
       {% if prediction == "UP" %}
-        <span class="badge bg-success">
-          Prediction: {{ prediction }} 
-          <br>
-          <br>
-          Confidence: {{ confidence }}
+        <span class="badge bg-success p-3">
+          Prediction
+          <span class="popup" onclick="togglePopup('popupPrediction')">ⓘ
+            <span class="popuptext" id="popupPrediction">This is the prediction for today's closing <br> stock price relative to yesterday.</span>
+          </span>
+          : {{ prediction }}
+          <br><br>
+          Confidence
+          <span class="popup" onclick="togglePopup('popupConfidence')">ⓘ
+            <span class="popuptext" id="popupConfidence">This is the probability that this prediction <br> is correct.</span>
+          </span>
+          : {{ confidence }}
         </span>
       {% else %}
-        <span class="badge bg-danger">
-          Prediction: {{ prediction }} 
-          <br>
-          <br>
-          Confidence: {{ confidence }}
+        <span class="badge bg-danger p-3">
+          Prediction
+          <span class="popup" onclick="togglePopup('popupPrediction')">ⓘ
+            <span class="popuptext" id="popupPrediction">This is the prediction for today's closing stock price relative to yesterday.</span>
+          </span>
+          : {{ prediction }}
+          <br><br>
+          Confidence
+          <span class="popup" onclick="togglePopup('popupConfidence')">ⓘ
+            <span class="popuptext" id="popupConfidence">This is the probability that this prediction is correct.</span>
+          </span>
+          : {{ confidence }}
         </span>
       {% endif %}
     </h3>
-
-    <!-- Pop up-->
-    <div class="popup" onclick="myFunction()">Click me!
-      <span class="popuptext" id="myPopup">Popup text...</span>
-    </div>   
 
     <div class="mt-4">
       <a href="/predict" class="btn btn-secondary btn-lg">Back to Stock Selection</a>
@@ -41,8 +51,8 @@
   </div>
 
   <script>
-    function myFunction() {
-    var popup = document.getElementById("myPopup");
+    function togglePopup(id) {
+    var popup = document.getElementById(id);
     popup.classList.toggle("show");
     }
   </script> 
