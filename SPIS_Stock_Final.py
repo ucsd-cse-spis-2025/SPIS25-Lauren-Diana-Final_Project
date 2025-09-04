@@ -2,96 +2,52 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-import torch.optim as optim
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
-import ta
-import matplotlib.pyplot as plt
 
-import kagglehub
 
 # Import data
 
 # Tesla data
-path1 = kagglehub.dataset_download("iamtanmayshukla/tesla-stocks-dataset")
-
-print("Path to dataset files:", path1)
-
 tesla_names = ["Date", "Open", "High", "Low", "Close/Last", "Volume"]
-tesla_path = r"C:\Users\laure\.cache\kagglehub\datasets\iamtanmayshukla\tesla-stocks-dataset\versions\5\HistoricalData_1726367135218.csv"
+tesla_path = "data/tesla-stock-data.csv"
 
 # Apple data
-path2 = kagglehub.dataset_download("varpit94/apple-stock-data-updated-till-22jun2021")
-
-print("Path to dataset files:", path2)
-
 apple_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-apple_path = r"C:\Users\laure\.cache\kagglehub\datasets\varpit94\apple-stock-data-updated-till-22jun2021\versions\8\AAPL.csv"
+apple_path = "data/apple-stock-data.csv"
 
 # Nvidia data
-path3 = kagglehub.dataset_download("programmerrdai/nvidia-stock-historical-data")
-
-print("Path to dataset files:", path3)
-
 nvidia_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-nvidia_path = r"C:\Users\laure\.cache\kagglehub\datasets\programmerrdai\nvidia-stock-historical-data\versions\1\NVDA (1).csv"
+nvidia_path = "data/nvidia-stock-data.csv"
 
 # Google data
-path4 = kagglehub.dataset_download("henryshan/google-stock-price")
-
-print("Path to dataset files:", path4)
-
 google_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-google_path = r"C:\Users\laure\.cache\kagglehub\datasets\henryshan\google-stock-price\versions\1\GOOG.csv"
+google_path = "data/google-stock-data.csv"
 
 # Meta data
-path5 = kagglehub.dataset_download("umerhaddii/meta-stock-data-2025")
-
-print("Path to dataset files:", path5)
-
 meta_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-meta_path = r"C:\Users\laure\.cache\kagglehub\datasets\umerhaddii\meta-stock-data-2025\versions\2\META stocks.csv"
+meta_path = "data/meta-stock-data.csv"
 
 # Qualcomm data
-path6 = kagglehub.dataset_download("varunsaikanuri/qualcomm-stocks-historical-data")
-
-print("Path to dataset files:", path6)
-
 qc_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-qc_path = r"C:\Users\laure\.cache\kagglehub\datasets\varunsaikanuri\qualcomm-stocks-historical-data\versions\19\Qualcomm_Stocks.csv"
+qc_path = "data/qualcomm-stock-data.csv"
 
 # Microsoft data
-path7 = kagglehub.dataset_download("umerhaddii/microsoft-stock-data-2025")
-
-print("Path to dataset files:", path7)
-
 ms_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-ms_path = r"C:\Users\laure\.cache\kagglehub\datasets\umerhaddii\microsoft-stock-data-2025\versions\1\MSFT_1986-03-13_2025-02-04.csv"
+ms_path = "data/microsoft-stock-data.csv"
 
 # Amazon data
-path8 = kagglehub.dataset_download("adilshamim8/amazon-stock-price-history")
-
-print("Path to dataset files:", path8)
-
 amazon_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-amazon_path = r"C:\Users\laure\.cache\kagglehub\datasets\adilshamim8\amazon-stock-price-history\versions\7\Amazon_stock_data.csv"
+amazon_path = "data/amazon-stock-data.csv"
 
 # Samsung data
-path9 = kagglehub.dataset_download("caesarmario/samsung-electronics-stock-historical-price")
-
-print("Path to dataset files:", path9)
-
 samsung_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-samsung_path = r"C:\Users\laure\.cache\kagglehub\datasets\caesarmario\samsung-electronics-stock-historical-price\versions\873\005930.KS.csv"
+samsung_path = "data/samsung-stock-data.csv"
 
 # Netflix data
-path0 = kagglehub.dataset_download("adilshamim8/netflix-stock-price-history")
-
-print("Path to dataset files:", path0)
-
 netflix_names = ["Date", "Open", "High", "Low", "Close", "Volume"]
-netflix_path = r"C:\Users\laure\.cache\kagglehub\datasets\adilshamim8\netflix-stock-price-history\versions\8\Netflix_stock_data.csv"
+netflix_path = "data/netflix-stock-data.csv"
+
 
 # Process the data and add columns
 def data_cleaning(stock, path, col_names):
