@@ -194,54 +194,6 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1}/{epochs}, Loss: {loss.item():.4f}, Train Acc: {train_acc:.4f}, Val Accuracy: {val_acc:.4f}")
 
-'''
-# Test the model with new data
-
-# Process the data
-df = data_cleaning("tesla", tesla_path, tesla_names)
-X_test_scaled, y_test, s = data_processing(df, scaler=scaler, fit_scaler=False)
-
-# Convert test data to PyTorch tensors
-X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32).unsqueeze(1)
-
-# Set the model to evaluate
-model.eval()
-
-# Get predictions
-with torch.no_grad():
-    test_outputs = model(X_test_tensor)
-    test_probs = torch.sigmoid(test_outputs)
-    test_preds_cls = (test_probs > 0.5).float()
-
-# Print classification report
-from sklearn.metrics import classification_report, accuracy_score
-
-print("Test Accuracy:", accuracy_score(y_test_tensor, test_preds_cls))
-print("Classification Report on Test Data:")
-print(classification_report(y_test_tensor, test_preds_cls))
-'''
-
-
-# Print future prediction from the current dataset
-def predict_next_day(stock, model, scaler, path, col_names):
-    # Only get latest row of data
-    df = data_cleaning(stock, path, col_names)
-    X_new_scaled, y_new, s = data_processing(df, scaler=scaler, fit_scaler=False)
-
-    # Use the yesterday's features
-    latest_features = X_new_scaled[-1].reshape(1, -1)
-    latest_tensor = torch.tensor(latest_features, dtype=torch.float32)
-
-    # Predict
-    model.eval()
-    with torch.no_grad():
-        output = model(latest_tensor)
-        prob = torch.sigmoid(output).item()
-        prediction = "UP" if prob > 0.5 else "DOWN"
-
-    return prediction, prob
-
 # Print future prediction from user input
 def predict_from_input(stock_name, model, scaler, open_price, high, low, close, volume, date_str):
     stock_list = ["tesla", "apple", "nvidia", "google", "meta", "qualcomm", "microsoft", "amazon", "samsung", "netflix"]
@@ -279,3 +231,51 @@ def predict_from_input(stock_name, model, scaler, open_price, high, low, close, 
             prob = .99
 
     return prediction, prob
+
+# Test the model with new data
+
+# Process the data
+df = data_cleaning("samsung", samsung_path, samsung_names)
+X_test_scaled, y_test, s = data_processing(df, scaler=scaler, fit_scaler=False)
+
+# Convert test data to PyTorch tensors
+X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
+y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32).unsqueeze(1)
+
+# Set the model to evaluate
+model.eval()
+
+# Get predictions
+with torch.no_grad():
+    test_outputs = model(X_test_tensor)
+    test_probs = torch.sigmoid(test_outputs)
+    test_preds_cls = (test_probs > 0.5).float()
+
+# Print classification report
+from sklearn.metrics import classification_report, accuracy_score
+
+print("Test Accuracy:", accuracy_score(y_test_tensor, test_preds_cls))
+print("Classification Report on Test Data:")
+print(classification_report(y_test_tensor, test_preds_cls))
+
+
+
+# Print future prediction from the current dataset
+def predict_next_day(stock, model, scaler, path, col_names):
+    # Only get latest row of data
+    df = data_cleaning(stock, path, col_names)
+    X_new_scaled, y_new, s = data_processing(df, scaler=scaler, fit_scaler=False)
+
+    # Use the yesterday's features
+    latest_features = X_new_scaled[-1].reshape(1, -1)
+    latest_tensor = torch.tensor(latest_features, dtype=torch.float32)
+
+    # Predict
+    model.eval()
+    with torch.no_grad():
+        output = model(latest_tensor)
+        prob = torch.sigmoid(output).item()
+        prediction = "UP" if prob > 0.5 else "DOWN"
+
+    return prediction, prob
+
