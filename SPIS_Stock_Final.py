@@ -235,7 +235,7 @@ def predict_from_input(stock_name, model, scaler, open_price, high, low, close, 
 # Test the model with new data
 
 # Process the data
-df = data_cleaning("samsung", samsung_path, samsung_names)
+df = data_cleaning("tesla", tesla_path, tesla_names)
 X_test_scaled, y_test, s = data_processing(df, scaler=scaler, fit_scaler=False)
 
 # Convert test data to PyTorch tensors
