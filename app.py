@@ -11,6 +11,10 @@ def render_home():
 def render_main():
     return render_template('main.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/predict/<stock>', methods=['GET'])
 def render_form(stock):
     stock_name = stock.capitalize()

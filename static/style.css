@@ -100,6 +100,18 @@ body {
   text-align: center;
 }
 
+.info-box {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 20px;
+  margin-top: 30px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  text-align: left;
+  font-size: 14px;
+  color: #ffffff;
+}
+
 /* Prevent horizontal scroll */
 body, html {
   margin: 0;
@@ -109,9 +121,9 @@ body, html {
 }
 
 /* Section display for hidden content */
-section {
+#intro, #main, #main2 section {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -135,6 +147,7 @@ section {
 #main2 {
   background: linear-gradient(180deg, #ffffff, #b45360);
   color: black;
+  padding-bottom: 5rem;
 }
 
 #intro h1, #intro p {
@@ -215,3 +228,74 @@ section {
   to {opacity:1 ;}
 }
 
+/* About page display */
+#about {
+  background: #4283d3;
+  color: white;
+  min-height: 100vh;
+  display: block;
+  padding: 2rem 0;
+}
+
+/* Reset inner sections inside #about */
+#about section {
+  width: auto;
+  height: auto;
+  display: block;
+  justify-content: initial;
+  align-items: initial;
+  padding: 1rem 0;
+  text-align: left;
+}
+
+/* Container inside about */
+#about .container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 8px;
+  color: white;
+  overflow-wrap: break-word;
+}
+
+/* Headings and text */
+#about h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: white;
+}
+
+#about p, #about ul {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: white;
+}
+
+#about ul {
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+/* Button styling */
+#about .btn-primary {
+  background-color: #f0f0f0;
+  color: #4283d3;
+  font-weight: bold;
+  padding: 10px 25px;
+  border-radius: 6px;
+  border: none;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+#about .btn-primary:hover {
+  background-color: #d1e3ff;
+  color: #084298;
+}
+
+#about code {
+  color: #fff;
+}

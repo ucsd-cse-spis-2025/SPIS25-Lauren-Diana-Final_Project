@@ -18,13 +18,12 @@
         <span class="badge bg-success p-3">
           Prediction
           <span class="popup" onclick="togglePopup('popupPrediction')">ⓘ
-            <span class="popuptext" id="popupPrediction">This is the prediction for today's closing <br> stock price relative to yesterday.</span>
-          </span>
+            <span class="popuptext" id="popupPrediction">This prediction tells you whether today's closing stock price is expected to be higher or lower than yesterday's close.</span>
           : {{ prediction }}
           <br><br>
           Confidence
           <span class="popup" onclick="togglePopup('popupConfidence')">ⓘ
-            <span class="popuptext" id="popupConfidence">This is the probability that this prediction <br> is correct.</span>
+            <span class="popuptext" id="popupConfidence">This confidence score represents the model's certainty in its prediction based on the data provided. A higher value means more certainty, but it is not a guarantee.</span>
           </span>
           : {{ confidence }}
         </span>
